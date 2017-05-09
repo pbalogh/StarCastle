@@ -20,6 +20,10 @@ export default class Ship extends Component {
 	static get FIRE_MISSILE(){
 		return "FIRE_MISSILE";
 	}
+	
+	static get POSITION(){
+		return "POSITION";
+	}
 
 	constructor(props){
 		super(props);
@@ -28,8 +32,8 @@ export default class Ship extends Component {
 		this.radius = this.props.radius;
 		this.state = {
 			angle: parseInt( this.props.angle, 10 ),
-			x: this.centerX + this.radius,
-			y: this.centerY + this.radius
+			x: this.centerX + 250,
+			y: this.centerY
 		}
 		this.doppelganger = { class: "hidden", x : 0, y : 0 };
 		this.speed = 0;
@@ -113,6 +117,7 @@ export default class Ship extends Component {
 		
 		if( this.state.x < -20 ) this.setState( { x : this.state.x + width });
 		if( this.state.y < -20 ) this.setState( { y : this.state.y + height });
+		this.emitter.emit( Ship.POSITION, { x : this.state.x, y : this.state.y } );
 	}
 
 	

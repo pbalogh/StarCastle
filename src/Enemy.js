@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import App from './App'
+import Ship from './Ship'
 
 export default class Enemy extends Component
 {
@@ -14,9 +15,10 @@ export default class Enemy extends Component
 			status: this.props.status
 			
 		};
+		this.angle_velocity = 0;
 		this.emitter = this.props.emitter;
 		this.emitter.on( App.ON_ENTER_FRAME, this.onEnterFrame.bind( this ) );
-		
+		this.emitter.on( Ship.POSITION, this.onShipMove.bind( this ) );
 		this.currentFrame = 0;
 	}
 	
@@ -28,7 +30,19 @@ export default class Enemy extends Component
 		this.currentFrame %= 33;
 		
 		this.move();
-		this.state.angle++;
+		this.state.angle = Math.floor( this.state.angle - this.angle_velocity );
+	}
+	
+	onShipMove( shipPosition ){
+	
+		let angle = Math.atan2( shipPosition.y - this.state.y, shipPosition.x - this.state.x );
+
+		angle *= 180/ Math.PI; // convert radians to degrees, CCW to CW
+
+		let angle_diff = this.state.angle - angle;
+		let potentially_smaller_angle_diff = this.state.angle - (angle + 360 );
+		this.angle_velocity = Math.min( angle_diff, potentially_smaller_angle_diff ) * .03;
+		//this.angle_velocity = angle;
 	}
 	
 	move(){

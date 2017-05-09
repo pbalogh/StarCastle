@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import RingSegment from './RingSegment';
 import App from './App';
 import Bullet from './Bullet';
+import $ from 'jquery';
 
 export default class Ring extends Component {
 
@@ -13,6 +14,7 @@ export default class Ring extends Component {
 			x: parseInt( this.props.centerX, 10 ),
 			y: parseInt( this.props.centerY, 10 )
 		}	
+		this.radius = this.getMaxRadius();
 		this.emitter = this.props.emitter;
 		this.emitter.on( App.ON_ENTER_FRAME, this.onEnterFrame.bind( this ) );
 		this.emitter.on( Bullet.MOVED_TO, this.onBulletMove.bind( this ) );	
@@ -50,9 +52,44 @@ export default class Ring extends Component {
 		{
 			this.segmentStatus[ seg ]++;								
 			bulletPosition.bullet.die();
+			if( this.areAllSegmentsDead() )
+			{
+				this.regenerate();
+			}
 		}
-
+	}
 	
+	areAllSegmentsDead(){
+	
+		for( let i = 0; i < this.numSegments; i++ )
+		{
+			if( this.segmentStatus[ i ] < 2 ) return false;
+		}
+		
+		return true;
+	}
+	
+	regenerate(){
+		
+		let self = this;
+		
+		this.radius = parseInt( this.props.radius, 10 )
+		
+		$( this ).animate({
+		
+			radius: this.getMaxRadius()
+		
+		});
+		
+		for( let i = 0; i < this.numSegments; i++ )
+		{
+			this.segmentStatus[ i ] = 0;
+		}
+		
+	}
+	
+	getMaxRadius(){
+		return parseInt( this.props.radius, 10 ) + ( this.state.index + 1 ) * Ring.QUANTUM_DISTANCE;
 	}
 	
 	//whichSegmentIsItHitting( bullet_distance_x, bullet_distance_y ){
@@ -112,31 +149,13 @@ export default class Ring extends Component {
 	}
 	
 	getRadius(){
-		 return parseInt( this.props.radius, 10 ) + this.state.index * Ring.QUANTUM_DISTANCE;
+	
+		return this.radius;
 	}
 	
 	getSizeClass(){
 	
-		let radius = this.getRadius();
-	
-		if( radius < 125 )
-		{
-			return "ring small";
-		}
-		else if( radius < 145 )
-		{
-			return "ring medium";
-		}
-		else if( radius < 165 )
-		{
-			return "ring large";
-		}
-		else
-		{
-			return "ring huge";
-		}
-		
-	
+		return "ring " + [ "small", "medium", "large", "huge" ][ this.state.index ];
 	}
 	
 	onEnterFrame(){

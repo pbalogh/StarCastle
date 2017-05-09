@@ -118,8 +118,8 @@ export default class Bullet extends Component
 		
 		return ( 
 			<g transform={this.getRotateTransform() + " " + this.getTranslateTransform() }>
-				<line x1="-2" y1="-2" x2="2" y2="2" className="bullet" />
-				<line x1="2" y1="-2" x2="-2" y2="2" className="bullet" />
+				<line x1="-1" y1="-1" x2="1" y2="1" className="bullet" />
+				<line x1="1" y1="-1" x2="-1" y2="1" className="bullet" />
 			</g> );
 	}
 	
