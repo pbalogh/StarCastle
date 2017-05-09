@@ -119,12 +119,13 @@ export default class Bullet extends Component
 		return ( 
 			<g transform={this.getRotateTransform() + " " + this.getTranslateTransform() }>
 				<line x1="-2" y1="-2" x2="2" y2="2" className="bullet" />
+				<line x1="2" y1="-2" x2="-2" y2="2" className="bullet" />
 			</g> );
 	}
 	
 	getRotateTransform(){
 		
-		let transformString = "rotate(" + this.state.angle + " " + this.state.x + " " + this.state.y + ")";
+		let transformString = "rotate(" + Math.floor( Math.random() * 360 ) + " " + this.state.x + " " + this.state.y + ")";
 		return transformString;
 	}
 
