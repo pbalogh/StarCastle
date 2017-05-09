@@ -59,9 +59,7 @@ export default class Bullet extends Component
 		if( bulletData.taken ) return;
 		
 		bulletData.taken = true;
-		
-		console.log("I'm taking bullet!" );
-		
+				
 		this.setState( { status : Bullet.ALIVE, x : bulletData.x, angle: bulletData.angle, y : bulletData.y });
 		this.currentFrame = 0;
 	
@@ -70,7 +68,7 @@ export default class Bullet extends Component
 	onEnterFrame(){
 		if( this.state.status === Bullet.DEAD ) return;
 		this.currentFrame++;
-		//console.log("this.currentFrame is " + this.currentFrame );
+
 		if( this.currentFrame > 25 )
 		{
 			//alert("SETTING THIS.DEAD TO TRUE");
@@ -81,7 +79,7 @@ export default class Bullet extends Component
 	}
 	
 	die(){
-		console.log("Bullet dying");
+
 		this.setState( { status : Bullet.DEAD });
 	}
 	

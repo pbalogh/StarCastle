@@ -82,7 +82,6 @@ export default class Ring extends Component {
 	
 	makeRingSegments(){
 		
-		//console.log("makeRingSegments");
 		let ringSegments = [];
 		
 		let angleIncrement = 2 * Math.PI / this.numSegments;
@@ -142,7 +141,6 @@ export default class Ring extends Component {
 	
 	onEnterFrame(){
 		this.setState( { angle: this.getNewAngle() } );		
-		//console.log("this.state.angle is " + this.state.angle );
 	}
 	
 	getNewAngle(){

@@ -64,7 +64,7 @@ class App extends Component {
 	
 	
 	fireMissile( missileData ){
-		console.log("fireMissile emitting " +  Bullet.WANT_TO_LAUNCH_BULLET + " with angle " + missileData.angle );
+
 	
 		this.emitter.emit( Bullet.WANT_TO_LAUNCH_BULLET, 
 		 {
@@ -98,7 +98,6 @@ class App extends Component {
 		}
 		
 		if( evt.keyCode === KEY.SPACE && value ){
-			console.log("emitting FIRE_BUTTON");
 		 	this.emitter.emit( Ship.FIRE_BUTTON );	
 		}
 		
@@ -138,8 +137,6 @@ class App extends Component {
 	generateRings(){
 	
 		let arr = [];
-		
-		//console.log("In generateRings, this.state.rotation is " + this.state.rotation);
 		
 		for( var i = 0; i < this.props.numRings; i++ )
 		{
