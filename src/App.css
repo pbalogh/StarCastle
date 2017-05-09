@@ -29,10 +29,17 @@ body{
 
 svg{
 	background-color: black;
-	left: 50%;
-	top: 50%;
-	/*margin-left:-400px;*/
-	/*margin-top: -300px;*/
+	margin-left:auto; 
+	margin-right:auto; 
+	display:block;
+}
+
+.title{
+cursor: default;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
 }
 
 g.ship{

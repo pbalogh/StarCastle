@@ -156,9 +156,9 @@ class App extends Component {
   render() {
   
     return (
-      <div className="App">
+      <div className="App" onClick={this.hideStartPrompt}>
 
-        <svg width="100%" height="600" onClick={this.hideStartPrompt}> {this.generateRings()}
+        <svg width="100%" height="600"> {this.generateRings()}
         <Ship emitter={this.emitter} angle="0" centerX={this.props.centerX} centerY={this.props.centerY} radius={this.state.radius + this.props.numRings * Ring.QUANTUM_DISTANCE } ref={(foo) => { this.ship = foo; }} />
         { this.bullets }
           </svg>

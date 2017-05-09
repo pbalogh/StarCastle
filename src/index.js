@@ -4,7 +4,7 @@ import App from './App';
 import './index.css';
 
 ReactDOM.render(
-  <App numRings="3" centerX="400" centerY="300" radius="100" />,
+  <App numRings="3" centerX={window.innerWidth*.5} centerY={window.innerHeight * .5} radius="100" />,
   document.getElementById('root')
 );
 
