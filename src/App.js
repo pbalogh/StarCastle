@@ -163,7 +163,7 @@ class App extends Component {
         { this.bullets }
           </svg>
           <div className="title">
-          LEFT AND RIGHT ARROWS TO ROTATE </br> SPACE BAR TO FIRE </br>
+          LEFT AND RIGHT ARROWS TO ROTATE <br /> SPACE BAR TO FIRE <br />
           Click Anywhere to Start
           </div>
       </div>
