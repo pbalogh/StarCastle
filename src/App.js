@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Ring from "./Ring"
 import Ship from "./Ship"
+import Enemy from "./Enemy"
 import Bullet from "./Bullet"
 import MicroEmitter from 'micro-emitter';
 import $ from 'jquery';
@@ -158,8 +159,14 @@ class App extends Component {
     return (
       <div className="App" onClick={this.hideStartPrompt}>
 
-        <svg width="100%" height="600"> {this.generateRings()}
-        <Ship emitter={this.emitter} angle="0" centerX={this.props.centerX} centerY={this.props.centerY} radius={this.state.radius + this.props.numRings * Ring.QUANTUM_DISTANCE } ref={(foo) => { this.ship = foo; }} />
+        <svg width="100%" height={window.innerHeight} >
+        
+        {this.generateRings()}
+        
+        <Ship emitter={this.emitter} angle="0" centerX={this.props.centerX} centerY={this.props.centerY}  radius={this.state.radius + this.props.numRings * Ring.QUANTUM_DISTANCE } ref={(foo) => { this.ship = foo; }} />
+        
+        <Enemy emitter={this.emitter} centerX={this.props.centerX} centerY={this.props.centerY} />
+        
         { this.bullets }
           </svg>
           <div className="title">

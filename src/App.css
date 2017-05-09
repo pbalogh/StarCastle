@@ -72,6 +72,23 @@ g.ring.huge{
 	stroke: blue;
 }
 
+.enemy{
+	stroke: yellow;
+	stroke-width: 1px;
+	fill: "none"
+}
+
+.zapper {
+	stroke: yellow;
+	stroke-width: 2px;
+	animation: zapper-shrink .4s linear infinite;
+}
+
+@keyframes zapper-shrink {
+	0% { transform: translateX( 0 )}
+	100% { transform: translateX( 32px )  scale(.20)}	
+}
+
 @font-face {
 
 	font-family: "VectorBattle";
@@ -82,7 +99,6 @@ div.title{
 	font-family: 'VectorBattle', sans-serif;
 	color: blue; 
 	line-height: 38px;
-
 	position:absolute;
 	left: 50%;
 	top: 50%;
