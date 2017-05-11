@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import App from './App'
+import App from './App';
 import $ from "jquery";
 
 export default class Bullet extends Component
@@ -19,6 +19,11 @@ export default class Bullet extends Component
 	{
 		return "ALIVE";
 	}
+
+	static get LIMBO()
+	{
+		return "LIMBO";
+	}	
 	
 	static get SPEED()
 	{
@@ -85,7 +90,7 @@ export default class Bullet extends Component
 	
 	move(){
 	
-		let stepsTaken = 0, numSteps = 8;
+		let stepsTaken = 0, numSteps = 10; // if we jump to our new position, we might "pass through" a ring
 	
 		while( this.state.status !== Bullet.DEAD && stepsTaken < numSteps )
 		{
@@ -125,12 +130,11 @@ export default class Bullet extends Component
 	
 	getRotateTransform(){
 		
-		let transformString = "rotate(" + Math.floor( Math.random() * 360 ) + " " + this.state.x + " " + this.state.y + ")";
-		return transformString;
+		return "rotate(" + Math.floor( Math.random() * 360 ) + " " + this.state.x + " " + this.state.y + ")";
 	}
 
 	getTranslateTransform(){
-		let transformString = "translate(" + this.state.x + " " + this.state.y + ")";
-		return transformString;
+	
+		return "translate(" + this.state.x + " " + this.state.y + ")";
 	}
 }

@@ -9,6 +9,11 @@ export default class Enemy extends Component
 		return "LOOKING_FOR_SEGMENT_AT_ANGLE";
 	}
 
+	static get FIRE_CANNON(){
+		return "FIRE_CANNON";
+	}
+		
+	
 	constructor( props ){
 		super( props );
 		this.state = {
@@ -52,9 +57,8 @@ export default class Enemy extends Component
 		this.emitter.emit( Enemy.LOOKING_FOR_SEGMENT_AT_ANGLE, this.state.angle );
 		if( ! this.blockedBySegmentAtAngle )
 		{
-			//alert("BOOM");
+			this.emitter.emit( Enemy.FIRE_CANNON, this.state.angle );
 		}
-		//this.setState( { angle : 0 } );
 	}
 	
 	onFoundSegmentAtAngle(){

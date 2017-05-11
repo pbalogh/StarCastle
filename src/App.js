@@ -5,6 +5,7 @@ import Ring from "./Ring"
 import Ship from "./Ship"
 import Enemy from "./Enemy"
 import Bullet from "./Bullet"
+import Cannonball from "./Cannonball"
 import MicroEmitter from 'micro-emitter';
 import $ from 'jquery';
 
@@ -20,7 +21,7 @@ const KEY = {
   SPACE: 32
 };
 
-const NUM_BULLETS_AT_ONCE = 10;
+const NUM_BULLETS_AT_ONCE = 7;
 
 class App extends Component {
 
@@ -48,8 +49,8 @@ class App extends Component {
 						
 		this.rotation = 0;
 		this.emitter = new MicroEmitter();
-		this.emitter.on( Ship.FIRE_MISSILE, this.fireMissile.bind( this ) );			
-		
+		this.emitter.on( Ship.FIRE_MISSILE, this.fireMissile.bind( this ) );	
+		this.releasedSpaceBar = true; // we are ready to fire
 		this.createPoolOfBullets();
 	}	
 	
@@ -98,8 +99,17 @@ class App extends Component {
 		 	keys.down = value;	
 		}
 		
-		if( evt.keyCode === KEY.SPACE && value ){
-		 	this.emitter.emit( Ship.FIRE_BUTTON );	
+		if( evt.keyCode === KEY.SPACE )
+		{
+			if( value && this.releasedSpaceBar )
+			{
+		 		this.emitter.emit( Ship.FIRE_BUTTON );
+		 		this.releasedSpaceBar = false;	
+		 	}
+		 	else if( !value )
+		 	{
+		 		this.releasedSpaceBar = true;
+		 	}
 		}
 		
 		return false;
@@ -168,6 +178,8 @@ class App extends Component {
         <Enemy emitter={this.emitter} centerX={this.props.centerX} centerY={this.props.centerY} />
         
         { this.bullets }
+        
+        <Cannonball emitter={this.emitter} centerX={this.props.centerX} centerY={this.props.centerY} status={Bullet.DEAD}/>
           </svg>
           <div className="title">
           LEFT AND RIGHT ARROWS TO ROTATE <br /> SPACE BAR TO FIRE <br />

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import App from './App'
+import App from './App';
+import Cannonball from './Cannonball';
 import $ from "jquery";
 import * as Util from './Util';
 	
@@ -42,12 +43,18 @@ export default class Ship extends Component {
 		this.onFireButton = this._onFireButton.bind( this );
 		this.emitter.on( Ship.FIRE_BUTTON, this.onFireButton );
 		this.emitter.on( App.ON_ENTER_FRAME, this.onEnterFrame.bind( this ) );
+		this.emitter.on( Cannonball.CANNONBALL_MOVED_TO, this.onCannonballMovedTo.bind( this ) );
+		
 		Util.makeAssertions();
 	}
 	
 	onEnterFrame(){
 		this.move();
 		this.testForRingCollision();
+	}
+	
+	onCannonballMovedTo( data ){
+	
 	}
 	
 	testForRingCollision(){

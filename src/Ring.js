@@ -57,11 +57,11 @@ export default class Ring extends Component {
 
 		let radius = this.getRadius();
 		
-		if( bulletPosition.x < this.state.x - radius ) return;
-		if( bulletPosition.x > this.state.x + radius ) return;	
+		if( bulletPosition.x < this.state.x - radius - 1 ) return;
+		if( bulletPosition.x > this.state.x + radius + 1 ) return;	
 		
-		if( bulletPosition.y < this.state.y - radius ) return;
-		if( bulletPosition.y > this.state.y + radius ) return;			
+		if( bulletPosition.y < this.state.y - radius - 1 ) return;
+		if( bulletPosition.y > this.state.y + radius + 1 ) return;			
 		
 
 		let seg = this.whichSegmentIsItHitting( bulletPosition.x, bulletPosition.y );
@@ -109,7 +109,6 @@ export default class Ring extends Component {
 		return parseInt( this.props.radius, 10 ) + ( this.state.index + 1 ) * Ring.QUANTUM_DISTANCE;
 	}
 	
-	//whichSegmentIsItHitting( bullet_distance_x, bullet_distance_y ){
 	whichSegmentIsItHitting( bullet_x, bullet_y ){
 		
 		// remember, each segment's position has the center of the ring added to it
@@ -125,10 +124,11 @@ export default class Ring extends Component {
 		{
 			let ep = this.getEndpointsOfSegmentBetweenAngles( angle, angle + angleIncrement );
 			angle += angleIncrement;
-			if( bullet_x > ep.x1 && bullet_x > ep.x2 ) continue;
-			if( bullet_x < ep.x1 && bullet_x < ep.x2 ) continue;
-			if( bullet_y > ep.y1 && bullet_y > ep.y2 ) continue;
-			if( bullet_y < ep.y1 && bullet_y < ep.y2 ) continue;
+			// add a little wiggle room
+			if( bullet_x > ep.x1 + 1 && bullet_x > ep.x2  + 1 ) continue;
+			if( bullet_x < ep.x1 - 1 && bullet_x < ep.x2 - 1 ) continue;
+			if( bullet_y > ep.y1 + 1 && bullet_y > ep.y2 + 1 ) continue;
+			if( bullet_y < ep.y1 - 1 && bullet_y < ep.y2 -1 ) continue;
 			return i;						
 		}			
 		return null;
