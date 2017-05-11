@@ -99,6 +99,7 @@ div.title{
 	font-family: 'VectorBattle', sans-serif;
 	color: blue; 
 	line-height: 38px;
+	text-shadow: -.5px -.5px 1px #ffffff, .5px .5px 0px #ff0000;
 	position:absolute;
 	left: 50%;
 	top: 50%;

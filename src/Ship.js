@@ -109,15 +109,21 @@ export default class Ship extends Component {
 		let width = this.svg.width();
 		let height = this.svg.height();
 		
-		this.setState( { x : this.state.x + this.velocity.x } );
-		this.setState( { y : this.state.y + this.velocity.y } );
+		let newPosition = { 
+							x : this.state.x + this.velocity.x,
+							y : this.state.y + this.velocity.y 
+						};
+					
+		newPosition.x %= width;
+		newPosition.y %= height;
 		
-		this.setState( { x : this.state.x % width } );
-		this.setState( { y : this.state.y % height } );
+		if( newPosition.x < -20 ) newPosition.x += width;
+		if( newPosition.y < -20 ) newPosition.y += height;
+	
+		this.setState( { x : newPosition.x } );
+		this.setState( { y : newPosition.y } );
 		
-		if( this.state.x < -20 ) this.setState( { x : this.state.x + width });
-		if( this.state.y < -20 ) this.setState( { y : this.state.y + height });
-		this.emitter.emit( Ship.POSITION, { x : this.state.x, y : this.state.y } );
+		this.emitter.emit( Ship.POSITION, { x : newPosition.x, y : newPosition.y } );
 	}
 
 	

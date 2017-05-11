@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import App from './App'
-import Ship from './Ship'
+import App from './App';
+import Ship from './Ship';
+import Ring from './Ring';
 
 export default class Enemy extends Component
 {
-	
+	static get LOOKING_FOR_SEGMENT_AT_ANGLE(){
+		return "LOOKING_FOR_SEGMENT_AT_ANGLE";
+	}
 
 	constructor( props ){
 		super( props );
@@ -19,6 +22,8 @@ export default class Enemy extends Component
 		this.emitter = this.props.emitter;
 		this.emitter.on( App.ON_ENTER_FRAME, this.onEnterFrame.bind( this ) );
 		this.emitter.on( Ship.POSITION, this.onShipMove.bind( this ) );
+		this.emitter.on( Ring.FOUND_INTACT_SEGMENT, this.onFoundSegmentAtAngle.bind( this ) );		
+		
 		this.currentFrame = 0;
 	}
 	
@@ -30,23 +35,30 @@ export default class Enemy extends Component
 		this.currentFrame %= 33;
 		
 		this.move();
-		this.state.angle = Math.floor( this.state.angle - this.angle_velocity );
+		
 	}
 	
 	onShipMove( shipPosition ){
 	
 		let angle = Math.atan2( shipPosition.y - this.state.y, shipPosition.x - this.state.x );
-
 		angle *= 180/ Math.PI; // convert radians to degrees, CCW to CW
-
 		let angle_diff = this.state.angle - angle;
-		let potentially_smaller_angle_diff = this.state.angle - (angle + 360 );
-		this.angle_velocity = Math.min( angle_diff, potentially_smaller_angle_diff ) * .03;
-		//this.angle_velocity = angle;
+		this.angle_velocity = angle_diff * .03;
 	}
 	
 	move(){
+		this.setState( { angle : this.state.angle - this.angle_velocity } );
+		this.blockedBySegmentAtAngle = false;
+		this.emitter.emit( Enemy.LOOKING_FOR_SEGMENT_AT_ANGLE, this.state.angle );
+		if( ! this.blockedBySegmentAtAngle )
+		{
+			//alert("BOOM");
+		}
+		//this.setState( { angle : 0 } );
+	}
 	
+	onFoundSegmentAtAngle(){
+		this.blockedBySegmentAtAngle = true;
 	}
 
 	render(){

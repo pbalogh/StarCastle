@@ -9,13 +9,13 @@ ReactDOM.render(
 );
 
 /*
-
-	TODO: Rings must regenerate when last segment is destroyed
+	TODO: https://www.npmjs.com/package/react-sound
 	TODO: Enemy fires cannon through gaps
 	TODO: Enemy can be destroyed
 	TODO: Enemy mines appear on inner rings
 	TODO: Enemy mines hop out from inner rings to outer rings
 	TODO: Enemy mines hop off outer rings and pursue hero in wavering path
+	TODO: Turn off machine-gun mode
 	TODO: Ship needs state to know if it should handle key input or not
 	TODO: Game needs click to start (in which case it should hide start-prompt and 
 	set a timeout to tell the ship to start accepting key input)
@@ -44,5 +44,6 @@ DONE:
 	TODO: Add enemy ship
 	TODO: Keyframe animation for enemy ship!	
 	TODO: Enemy ship turns to face hero
+	TODO: Rings must regenerate when last segment is destroyed
 	
 */

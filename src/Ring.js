@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import RingSegment from './RingSegment';
 import App from './App';
 import Bullet from './Bullet';
+import Enemy from './Enemy';
 import $ from 'jquery';
 
 export default class Ring extends Component {
+
+
 
 	constructor(props){
 		super(props);
@@ -18,6 +21,7 @@ export default class Ring extends Component {
 		this.emitter = this.props.emitter;
 		this.emitter.on( App.ON_ENTER_FRAME, this.onEnterFrame.bind( this ) );
 		this.emitter.on( Bullet.MOVED_TO, this.onBulletMove.bind( this ) );	
+		this.emitter.on( Enemy.LOOKING_FOR_SEGMENT_AT_ANGLE, this.onEnemyLookingForSegment.bind( this ) );	
 		this.numSegments = parseInt( this.props.numSegments, 10 );	
 		this.segmentStatus = [];
 		for( let i = 0; i < this.numSegments; i++ )
@@ -32,6 +36,21 @@ export default class Ring extends Component {
 
 	static get QUANTUM_DISTANCE(){
 		return 22;
+	}
+	
+	static get FOUND_INTACT_SEGMENT(){
+		return "FOUND_INTACT_SEGMENT";
+	}
+	
+	onEnemyLookingForSegment( angle ){
+		// make it a positive number of degrees by wrapping around 360
+		let angleDiff = (( angle - this.state.angle ) + 360 ) % 360;
+		let degreesPerSegment = 360 / this.numSegments;
+		let seg = Math.floor( angleDiff / degreesPerSegment );
+		if( this.segmentStatus[ seg ] < 2 )
+		{
+			this.emitter.emit( Ring.FOUND_INTACT_SEGMENT );
+		}
 	}
 	
 	onBulletMove( bulletPosition ) {
@@ -70,9 +89,7 @@ export default class Ring extends Component {
 	}
 	
 	regenerate(){
-		
-		let self = this;
-		
+				
 		this.radius = parseInt( this.props.radius, 10 )
 		
 		$( this ).animate({
