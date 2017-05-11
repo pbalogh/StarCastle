@@ -6,9 +6,23 @@ import Enemy from './Enemy';
 import $ from 'jquery';
 
 export default class Ring extends Component {
+	
+	static get ROTATION_SPEED(){
+		return 1.1;
+	}	
 
-
-
+	static get QUANTUM_DISTANCE(){
+		return 22;
+	}
+	
+	static get RESURRECT(){
+		return "RESURRECT";
+	}
+	
+	static get FOUND_INTACT_SEGMENT(){
+		return "FOUND_INTACT_SEGMENT";
+	}
+	
 	constructor(props){
 		super(props);
 		this.state = {
@@ -22,6 +36,8 @@ export default class Ring extends Component {
 		this.emitter.on( App.ON_ENTER_FRAME, this.onEnterFrame.bind( this ) );
 		this.emitter.on( Bullet.MOVED_TO, this.onBulletMove.bind( this ) );	
 		this.emitter.on( Enemy.LOOKING_FOR_SEGMENT_AT_ANGLE, this.onEnemyLookingForSegment.bind( this ) );	
+		this.emitter.on( Ring.RESURRECT, this.regenerate.bind( this ) );	
+		
 		this.numSegments = parseInt( this.props.numSegments, 10 );	
 		this.segmentStatus = [];
 		for( let i = 0; i < this.numSegments; i++ )
@@ -29,19 +45,7 @@ export default class Ring extends Component {
 			this.segmentStatus.push( 0 );
 		}
 	}
-	
-	static get ROTATION_SPEED(){
-		return 1.1;
-	}	
 
-	static get QUANTUM_DISTANCE(){
-		return 22;
-	}
-	
-	static get FOUND_INTACT_SEGMENT(){
-		return "FOUND_INTACT_SEGMENT";
-	}
-	
 	onEnemyLookingForSegment( angle ){
 		let segmentIndex = this.findSegmentAtGlobalAngle( angle );
 		

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 //import logo from './logo.svg';
 import './App.css';
-import Ring from "./Ring"
-import Ship from "./Ship"
-import Enemy from "./Enemy"
-import Bullet from "./Bullet"
-import Cannonball from "./Cannonball"
+import Ring from "./Ring";
+import Ship from "./Ship";
+import Enemy from "./Enemy";
+import Bullet from "./Bullet";
+import Cannonball from "./Cannonball";
+import Explosion from "./Explosion";
 import MicroEmitter from 'micro-emitter';
 import $ from 'jquery';
 
@@ -180,6 +181,9 @@ class App extends Component {
         { this.bullets }
         
         <Cannonball emitter={this.emitter} centerX={this.props.centerX} centerY={this.props.centerY} status={Bullet.DEAD}/>
+        
+        <Explosion emitter={this.emitter} status={Bullet.DEAD} />
+        
           </svg>
           <div className="title">
           LEFT AND RIGHT ARROWS TO ROTATE <br /> SPACE BAR TO FIRE <br />

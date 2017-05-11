@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import App from './App';
 import Ship from './Ship';
 import Ring from './Ring';
+import Bullet from './Bullet';
+import Explosion from './Explosion';
 
 export default class Enemy extends Component
 {
@@ -12,6 +14,16 @@ export default class Enemy extends Component
 	static get FIRE_CANNON(){
 		return "FIRE_CANNON";
 	}
+	
+	static get ALIVE(){
+		return "ALIVE";
+	}
+	
+	static get EXPLODING(){
+		return "EXPLODING";
+	}
+	
+	
 		
 	
 	constructor( props ){
@@ -20,7 +32,7 @@ export default class Enemy extends Component
 			angle : 0,
 			x: this.props.centerX,
 			y: this.props.centerY,
-			status: this.props.status
+			status: Enemy.ALIVE
 			
 		};
 		this.angle_velocity = 0;
@@ -28,7 +40,7 @@ export default class Enemy extends Component
 		this.emitter.on( App.ON_ENTER_FRAME, this.onEnterFrame.bind( this ) );
 		this.emitter.on( Ship.POSITION, this.onShipMove.bind( this ) );
 		this.emitter.on( Ring.FOUND_INTACT_SEGMENT, this.onFoundSegmentAtAngle.bind( this ) );		
-		
+		this.emitter.on( Bullet.MOVED_TO, this.onBulletMove.bind( this ) );			
 		this.currentFrame = 0;
 	}
 	
@@ -51,6 +63,29 @@ export default class Enemy extends Component
 		this.angle_velocity = angle_diff * .03;
 	}
 	
+	onBulletMove( bulletPosition ){
+	
+		let deltaX = bulletPosition.x - this.state.x;
+		let deltaY = bulletPosition.y - this.state.y;		
+	
+		let distance = Math.sqrt( deltaX * deltaX + deltaY * deltaY );
+		if( distance < 100 )
+		{
+			this.explode();
+		}
+	}
+	
+	explode(){
+		this.setState( { status : Enemy.EXPLODING } );
+		this.emitter.emit( Explosion.EXPLOSION, { x: this.state.x, y: this.state.y, color: "yellow" } );
+		setTimeout( this.resurrect.bind( this ), 4000 );	
+	}
+	
+	resurrect(){
+		this.setState( { status : Enemy.ALIVE } );
+		this.emitter.emit( Ring.RESURRECT );
+	}
+	
 	move(){
 		this.setState( { angle : this.state.angle - this.angle_velocity } );
 		this.blockedBySegmentAtAngle = false;
@@ -66,6 +101,8 @@ export default class Enemy extends Component
 	}
 
 	render(){
+			
+		if( this.state.status !== Enemy.ALIVE ) return null;	
 			
 		return ( 
 			<g transform={this.getRotateTransform() + " " + this.getTranslateTransform()} className="enemy">

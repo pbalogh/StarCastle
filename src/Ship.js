@@ -3,6 +3,7 @@ import App from './App';
 import Cannonball from './Cannonball';
 import $ from "jquery";
 import * as Util from './Util';
+import Explosion from './Explosion';
 	
 export default class Ship extends Component {
 
@@ -25,6 +26,14 @@ export default class Ship extends Component {
 	static get POSITION(){
 		return "POSITION";
 	}
+	
+	static get EXPLODING(){
+		return "EXPLODING";
+	}
+	
+	static get ALIVE(){
+		return "ALIVE";
+	}
 
 	constructor(props){
 		super(props);
@@ -34,7 +43,8 @@ export default class Ship extends Component {
 		this.state = {
 			angle: parseInt( this.props.angle, 10 ),
 			x: this.centerX + 250,
-			y: this.centerY
+			y: this.centerY,
+			status: Ship.ALIVE
 		}
 		this.doppelganger = { class: "hidden", x : 0, y : 0 };
 		this.speed = 0;
@@ -53,10 +63,26 @@ export default class Ship extends Component {
 		this.testForRingCollision();
 	}
 	
-	onCannonballMovedTo( data ){
-	
+	onCannonballMovedTo( position ){
+		let deltaX = position.x - this.state.x;
+		let deltaY = position.y - this.state.y;			
+		let distance = Math.sqrt( deltaX * deltaX + deltaY * deltaY );
+		if( distance < 100 )
+		{
+			this.explode();
+		}
 	}
 	
+	explode(){
+		this.setState( { status : Ship.EXPLODING } );
+		this.emitter.emit( Explosion.EXPLOSION, { x: this.state.x, y: this.state.y, color: "yellow" } );
+		setTimeout( this.resurrect.bind( this ), 4000 );	
+	}
+		
+	resurrect(){
+		this.setState( { status : Ship.ALIVE } );
+	}
+		
 	testForRingCollision(){
 	
 		let deltaX = this.state.x - this.centerX;
@@ -165,6 +191,8 @@ export default class Ship extends Component {
 	}
 
 	render(){
+		
+		if( this.state.status !== Ship.ALIVE ) return null;
 		
 		return(
 		

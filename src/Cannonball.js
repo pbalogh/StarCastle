@@ -32,7 +32,7 @@ export default class Cannonball extends Component
 	
 	fireCannon( angle ){
 	
-		if( this.state.status != Bullet.DEAD ) return; // already in flight or in limbo
+		if( this.state.status !== Bullet.DEAD ) return; // already in flight or in limbo
 		
 		this.setState( { 
 							x: parseInt( this.props.centerX, 10 ), 

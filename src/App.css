@@ -89,6 +89,21 @@ g.ring.huge{
 	100% { transform: translateX( 32px )  scale(.20)}	
 }
 
+@keyframes explosion-expand-and-shrink {
+	0% { transform: rotate( 2deg ) scale(.02 ) }
+	50% { transform: rotate( 360deg ) scale(1.2 )}	
+	99% { transform: rotate( 720deg ) scale(.02 )}		
+	100% { transform: rotate( 720deg ) scale(.0002 )}		
+}
+
+.explosion{
+	stroke: yellow;
+	stroke-width: 1px;
+	fill: "none";
+	animation: explosion-expand-and-shrink .4s ease-in-out forwards;
+}
+
+
 @font-face {
 
 	font-family: "VectorBattle";
