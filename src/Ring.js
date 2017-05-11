@@ -43,39 +43,60 @@ export default class Ring extends Component {
 	}
 	
 	onEnemyLookingForSegment( angle ){
-		// make it a positive number of degrees by wrapping around 360
-		let angleDiff = (( angle - this.state.angle ) + 360 ) % 360;
-		let degreesPerSegment = 360 / this.numSegments;
-		let seg = Math.floor( angleDiff / degreesPerSegment );
-		if( this.segmentStatus[ seg ] < 2 )
+		let segmentIndex = this.findSegmentAtGlobalAngle( angle );
+		
+		if( this.segmentStatus[ segmentIndex ] < 2 )
 		{
 			this.emitter.emit( Ring.FOUND_INTACT_SEGMENT );
 		}
 	}
 	
+	findSegmentAtGlobalAngle( angle ){
+		// make it a positive number of degrees by wrapping around 360
+		let angleDiff = (( angle - this.state.angle ) + 360 ) % 360;
+		let degreesPerSegment = 360 / this.numSegments;
+		let seg = Math.floor( angleDiff / degreesPerSegment );
+		return seg;
+	}
+	
 	onBulletMove( bulletPosition ) {
 
 		let radius = this.getRadius();
-		
-		if( bulletPosition.x < this.state.x - radius - 1 ) return;
-		if( bulletPosition.x > this.state.x + radius + 1 ) return;	
-		
-		if( bulletPosition.y < this.state.y - radius - 1 ) return;
-		if( bulletPosition.y > this.state.y + radius + 1 ) return;			
-		
 
-		let seg = this.whichSegmentIsItHitting( bulletPosition.x, bulletPosition.y );
-		if( seg == null ) return;
+		let previousDelta = { x : bulletPosition.prevX - this.state.x, y : bulletPosition.prevY - this.state.y };
 		
-		if( this.segmentStatus[ seg ] < 2 ) // it's a living segment
+		let currentDelta = { x : bulletPosition.x - this.state.x, y : bulletPosition.y - this.state.y };		
+
+		let previousDistance = Math.sqrt( 	previousDelta.x * previousDelta.x +
+											previousDelta.y * previousDelta.y );
+											
+		let currentDistance = Math.sqrt( 	currentDelta.x * currentDelta.x +
+											currentDelta.y * currentDelta.y );
+											
+		// we know we passed through this ring
+		// if we either went from outside it to inside it
+		// or vice versa											
+		if( ( previousDistance > radius ) &&  (currentDistance > radius ) ) return;
+		// we were, and still are, outside
+
+		if( ( previousDistance < radius ) && ( currentDistance < radius ) ) return;
+		// we were, and still are, inside											
+		
+		// still here? we crossed the radius.	
+		
+		let angle = Math.atan2( bulletPosition.y - this.state.y, bulletPosition.x - this.state.x );
+		let globalAngle = 180 * angle / Math.PI;	
+		let segmentIndex = this.findSegmentAtGlobalAngle( globalAngle );
+
+		if( this.segmentStatus[ segmentIndex ] < 2 ) // it's a living segment
 		{
-			this.segmentStatus[ seg ]++;								
+			this.segmentStatus[ segmentIndex ]++;								
 			bulletPosition.bullet.die();
 			if( this.areAllSegmentsDead() )
 			{
 				this.regenerate();
 			}
-		}
+		}								
 	}
 	
 	areAllSegmentsDead(){
@@ -108,32 +129,7 @@ export default class Ring extends Component {
 	getMaxRadius(){
 		return parseInt( this.props.radius, 10 ) + ( this.state.index + 1 ) * Ring.QUANTUM_DISTANCE;
 	}
-	
-	whichSegmentIsItHitting( bullet_x, bullet_y ){
-		
-		// remember, each segment's position has the center of the ring added to it
-		// so let's subtract the ring's center from the bullet's position
-		// to determine their relative position
-		
-		bullet_x -=  + this.state.x;
-		bullet_y -=  + this.state.y;		
-		
-		let angleIncrement = 2 * Math.PI / this.numSegments;
-		let angle = this.state.angle * Math.PI / 180;
-		for( let i = 0; i < this.numSegments; i++ )
-		{
-			let ep = this.getEndpointsOfSegmentBetweenAngles( angle, angle + angleIncrement );
-			angle += angleIncrement;
-			// add a little wiggle room
-			if( bullet_x > ep.x1 + 1 && bullet_x > ep.x2  + 1 ) continue;
-			if( bullet_x < ep.x1 - 1 && bullet_x < ep.x2 - 1 ) continue;
-			if( bullet_y > ep.y1 + 1 && bullet_y > ep.y2 + 1 ) continue;
-			if( bullet_y < ep.y1 - 1 && bullet_y < ep.y2 -1 ) continue;
-			return i;						
-		}			
-		return null;
-	}
-	
+
 	makeRingSegments(){
 		
 		let ringSegments = [];
@@ -203,6 +199,6 @@ export default class Ring extends Component {
 	}
 	
 	getRotateTransform(){
-		return "rotate(" + this.state.angle + " " + this.props.centerX * 1 + " " + this.props.centerY * 1 + ")";
+		return "rotate(" + this.state.angle + " " + this.state.x + " " + this.state.y + ")";
 	}
 }

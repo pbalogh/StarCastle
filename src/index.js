@@ -9,8 +9,9 @@ ReactDOM.render(
 );
 
 /*
+	TODO: Improve appearance of cannon
 	TODO: https://www.npmjs.com/package/react-sound
-	TODO: Enemy can be destroyed
+	TODO: Enemy can be destroyed (w animation and deactivated Ship)
 	TODO: Enemy mines appear on inner rings
 	TODO: Enemy mines hop out from inner rings to outer rings
 	TODO: Enemy mines hop off outer rings and pursue hero in wavering path

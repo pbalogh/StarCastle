@@ -64,8 +64,15 @@ export default class Bullet extends Component
 		if( bulletData.taken ) return;
 		
 		bulletData.taken = true;
+		
+		this.prevX = bulletData.x;
+		this.prevY = bulletData.y;
 				
-		this.setState( { status : Bullet.ALIVE, x : bulletData.x, angle: bulletData.angle, y : bulletData.y });
+		this.setState( { 	status : Bullet.ALIVE, 
+							x : bulletData.x, 
+							y : bulletData.y,
+							angle: bulletData.angle
+					});
 		this.currentFrame = 0;
 	
 	}
@@ -89,15 +96,7 @@ export default class Bullet extends Component
 	}
 	
 	move(){
-	
-		let stepsTaken = 0, numSteps = 10; // if we jump to our new position, we might "pass through" a ring
-	
-		while( this.state.status !== Bullet.DEAD && stepsTaken < numSteps )
-		{
-			this.moveBy( Bullet.SPEED / numSteps );
-			stepsTaken++;
-		}
-		
+		this.moveBy( Bullet.SPEED );
 	}
 	
 	moveBy( distance ) {
@@ -114,7 +113,10 @@ export default class Bullet extends Component
 		this.setState( { x : newX } );
 		this.setState( { y : newY } );
 		
-		this.emitter.emit( Bullet.MOVED_TO, { x : this.state.x, y : this.state.y, bullet: this } );
+		this.emitter.emit( Bullet.MOVED_TO, { x : this.state.x, y : this.state.y, prevX: this.prevX, prevY: this.prevY, bullet: this } );
+		
+		this.prevX = this.state.x;
+		this.prevY = this.state.y;
 	}
 	
 	render(){
