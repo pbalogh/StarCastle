@@ -221,6 +221,9 @@ class App extends Component {
           LEFT AND RIGHT ARROWS TO ROTATE <br /> SPACE BAR TO FIRE <br />
           Click Anywhere to Start
           </div>
+					<div className="score">
+          000000
+          </div>
       </div>
     );
   }

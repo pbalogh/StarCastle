@@ -57,18 +57,14 @@ export default class Ship extends StarCastleEntity {
 		// randomize where we appear so that we don't always show up in same place.
 		// otherwise, the cannon will just grief us every time.
 		// put us either near 3 o'clock or near 9 o'clock
-		let piWedge = Math.PI * .3;
-		let angle = piWedge * .5 - Math.random() * piWedge;
-		if( Math.random() > .55 )
-		{
-			angle += Math.PI;
-		}
+
 		this.state = {
-			angle: 180 + angle * 180 / Math.PI, // our rotation should be facing in, in degrees
-			x: this.centerX + Math.cos( angle ) * ( this.radius + 80 ),
-			y: this.centerY + Math.sin( angle ) * ( this.radius + 80),
+			x : 0,
+			y: 0,
+			angle : 0,
 			status: Ship.LIMBO
 		}
+
 		this.doppelganger = { class: "hidden", x : 0, y : 0 };
 		this.speed = 0;
 		this.velocity = { x : 0, y : 0 };
@@ -115,7 +111,22 @@ export default class Ship extends StarCastleEntity {
 
 	resurrect(){
 		this.emitter.emit( Ship.CHANGE_STATUS, Ship.ALIVE );
+		this.randomizeAngleAndPosition();
 		this.setState( { status : Ship.ALIVE } );
+	}
+
+	randomizeAngleAndPosition(){
+		let piWedge = Math.PI * .3;
+		let angle = piWedge * .5 - Math.random() * piWedge;
+		if( Math.random() > .55 )
+		{
+			angle += Math.PI;
+		}
+
+		this.setState( { 	angle : 180 + angle * 180 / Math.PI, // our rotation should be facing in, in degrees
+											x: this.centerX + Math.cos( angle ) * ( this.radius + 80 ),
+											y: this.centerY + Math.sin( angle ) * ( this.radius + 80)
+									});
 	}
 
 	testForRingCollision(){
@@ -199,6 +210,7 @@ export default class Ship extends StarCastleEntity {
 
 	componentDidMount() {
 		this.svg = $('svg');
+		this.randomizeAngleAndPosition();
 	}
 
 	_onFireButton(){

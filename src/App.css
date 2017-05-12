@@ -29,8 +29,8 @@ body{
 
 svg{
 	background-color: black;
-	margin-left:auto; 
-	margin-right:auto; 
+	margin-left:auto;
+	margin-right:auto;
 	display:block;
 }
 
@@ -49,7 +49,7 @@ g.ship{
 
 .broken {
 	display: none;
-	
+
 }
 
 g.ring{
@@ -86,14 +86,14 @@ g.ring.huge{
 
 @keyframes zapper-shrink {
 	0% { transform: translateX( 0 )}
-	100% { transform: translateX( 32px )  scale(.20)}	
+	100% { transform: translateX( 32px )  scale(.20)}
 }
 
 @keyframes explosion-expand-and-shrink {
 	0% { transform: rotate( 2deg ) scale(.02 ) }
-	50% { transform: rotate( 360deg ) scale(1.2 )}	
-	99% { transform: rotate( 720deg ) scale(.02 )}		
-	100% { transform: rotate( 720deg ) scale(.0002 )}		
+	50% { transform: rotate( 360deg ) scale(1.2 )}
+	99% { transform: rotate( 720deg ) scale(.02 )}
+	100% { transform: rotate( 720deg ) scale(.0002 )}
 }
 
 .explosion{
@@ -119,7 +119,7 @@ g.ring.huge{
 
 div.title{
 	font-family: 'VectorBattle', sans-serif;
-	color: blue; 
+	color: blue;
 	line-height: 38px;
 	text-shadow: -.5px -.5px 1px #ffffff, .5px .5px 0px #ff0000;
 	position:absolute;
@@ -127,7 +127,23 @@ div.title{
 	top: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-	
+
+	cursor: default;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+div.score{
+	font-family: 'VectorBattle', sans-serif;
+	color: blue;
+	line-height: 38px;
+	position:absolute;
+	left: 0%;
+	top: 0%;
+	margin-left: 9px;
+
 	cursor: default;
 	-webkit-user-select: none;
 	-moz-user-select: none;
