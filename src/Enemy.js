@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import App from './App';
+import React from 'react';
 import Ship from './Ship';
 import Ring from './Ring';
 import Bullet from './Bullet';
 import Explosion from './Explosion';
+import StarCastleEntity from './StarCastleEntity';
 
-export default class Enemy extends Component
+// StarCastleEntity has basic centering, resize, emitter, and onEnterFrame handlers
+export default class Enemy extends StarCastleEntity
 {
 	static get LOOKING_FOR_SEGMENT_AT_ANGLE(){
 		return "LOOKING_FOR_SEGMENT_AT_ANGLE";
@@ -28,39 +29,24 @@ export default class Enemy extends Component
 		super( props );
 		this.state = {
 			angle : 0,
-			x: this.props.centerX,
-			y: this.props.centerY,
 			status: Enemy.ALIVE,
 			radius: parseInt( this.props.radius, 10 )
 		};
+
 		this.angle_velocity = 0;
-		this.emitter = this.props.emitter;
-		this.emitter.on( App.ON_ENTER_FRAME, this.onEnterFrame.bind( this ) );
 		this.emitter.on( Ship.POSITION, this.onShipMove.bind( this ) );
 		this.emitter.on( Ring.FOUND_INTACT_SEGMENT, this.onFoundSegmentAtAngle.bind( this ) );		
 		this.emitter.on( Bullet.MOVED_TO, this.onBulletMove.bind( this ) );	
 		this.emitter.on( Ship.CHANGE_STATUS, this.onShipChangeStatus.bind( this ) );			
-				
-		this.currentFrame = 0;
 	}
 	
 	onShipChangeStatus( newStatus ){
 		this.shipStatus = newStatus;
 	}	
 	
-	onEnterFrame(){
-	
-		this.currentFrame++;
-
-		this.currentFrame %= 33;
-		
-		this.move();
-		
-	}
-	
 	onShipMove( shipPosition ){
 	
-		let angle = Math.atan2( shipPosition.y - this.state.y, shipPosition.x - this.state.x );
+		let angle = Math.atan2( shipPosition.y - this.state.centerY, shipPosition.x - this.state.centerX );
 		angle *= 180/ Math.PI; // convert radians to degrees, CCW to CW
 		let angle_diff = this.state.angle - angle;
 		this.angle_velocity = angle_diff * .03;
@@ -70,8 +56,8 @@ export default class Enemy extends Component
 	
 		if( this.state.status !== Enemy.ALIVE ) return; // can only get shot when alive
 	
-		let deltaX = bulletPosition.x - this.state.x;
-		let deltaY = bulletPosition.y - this.state.y;		
+		let deltaX = bulletPosition.x - this.state.centerX;
+		let deltaY = bulletPosition.y - this.state.centerY;		
 	
 		let distance = Math.sqrt( deltaX * deltaX + deltaY * deltaY );
 		if( distance < this.state.radius )
@@ -82,7 +68,7 @@ export default class Enemy extends Component
 	
 	explode(){
 		this.setState( { status : Enemy.EXPLODING } );
-		this.emitter.emit( Explosion.EXPLOSION, { x: this.state.x, y: this.state.y, color: "yellow" } );
+		this.emitter.emit( Explosion.EXPLOSION, { x: this.state.centerX, y: this.state.centerY, color: "yellow" } );
 		setTimeout( this.resurrect.bind( this ), 4000 );	
 	}
 	
@@ -147,19 +133,15 @@ export default class Enemy extends Component
 	getExplosionClass(){
 		return "hidden";
 	}	
-	hideWhenCurrentFrameIsnt( whichFrame ){
-		if( typeof whichFrame === "number" ) return this.currentFrame === whichFrame ? "" : "hidden";
-		if( typeof whichFrame === "object" ) return whichFrame.indexOf( this.currentFrame ) > -1 ? "" : "hidden";
-	}
 	
 	getRotateTransform(){
 		
-		let transformString = "rotate(" + this.state.angle + " " + this.state.x + " " + this.state.y + ")";
+		let transformString = "rotate(" + this.state.angle + " " + this.state.centerX + " " + this.state.centerY + ")";
 		return transformString;
 	}
 
 	getTranslateTransform(){
-		let transformString = "translate(" + this.state.x + " " + this.state.y + ")";
+		let transformString = "translate(" + this.state.centerX + " " + this.state.centerY + ")";
 		return transformString;
 	}
 }

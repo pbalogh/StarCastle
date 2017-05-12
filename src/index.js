@@ -11,7 +11,6 @@ ReactDOM.render(
 /*
 
 	TODO: https://www.npmjs.com/package/react-sound
-	TODO: Enemy can be destroyed (w animation and deactivated Ship)
 	TODO: Enemy mines appear on inner rings
 	TODO: Enemy mines hop out from inner rings to outer rings
 	TODO: Enemy mines hop off outer rings and pursue hero in wavering path
@@ -51,4 +50,5 @@ DONE:
 	TODO: Ship needs state to know if it should handle key input or not
 	TODO: Game needs click to start (in which case it should hide start-prompt and 
 	set a timeout to tell the ship to start accepting key input)	
+	TODO: Enemy can be destroyed (w animation and deactivated Ship)
 */
