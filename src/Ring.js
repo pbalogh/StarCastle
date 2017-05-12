@@ -12,7 +12,7 @@ export default class Ring extends Component {
 	}	
 
 	static get QUANTUM_DISTANCE(){
-		return 22;
+		return 33;
 	}
 	
 	static get RESURRECT(){
@@ -80,10 +80,10 @@ export default class Ring extends Component {
 		// we know we passed through this ring
 		// if we either went from outside it to inside it
 		// or vice versa											
-		if( ( previousDistance > radius ) &&  (currentDistance > radius ) ) return;
+		if( ( previousDistance > radius + 3 ) &&  (currentDistance > radius + 3 ) ) return;
 		// we were, and still are, outside
 
-		if( ( previousDistance < radius ) && ( currentDistance < radius ) ) return;
+		if( ( previousDistance < radius - 3 ) && ( currentDistance < radius - 3 ) ) return;
 		// we were, and still are, inside											
 		
 		// still here? we crossed the radius.	

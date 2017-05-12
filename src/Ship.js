@@ -8,11 +8,15 @@ import Explosion from './Explosion';
 export default class Ship extends Component {
 
 	static get ROTATION_SPEED(){
-		return 1.8;
+		return 3;
 	}
 	
 	static get THRUST_SPEED(){
-		return .1;
+		return .3;
+	}
+	
+	static get MAX_SPEED(){
+		return 9;
 	}
 	
 	static get FIRE_BUTTON(){
@@ -34,17 +38,34 @@ export default class Ship extends Component {
 	static get ALIVE(){
 		return "ALIVE";
 	}
+	
+	static get LIMBO(){
+		return "LIMBO";
+	}	
+	
+	static get CHANGE_STATUS(){
+		return "CHANGE_STATUS";
+	}
 
 	constructor(props){
 		super(props);
 		this.centerX = parseInt( this.props.centerX, 10 );
 		this.centerY = parseInt( this.props.centerY, 10 );
-		this.radius = this.props.radius;
+		this.radius = parseInt( this.props.radius, 10 ) + 10;
+		// randomize where we appear so that we don't always show up in same place.
+		// otherwise, the cannon will just grief us every time.
+		// put us either near 3 o'clock or near 9 o'clock
+		let piWedge = Math.PI * .3;
+		let angle = piWedge * .5 - Math.random() * piWedge;
+		if( Math.random() > .55 )
+		{
+			angle += Math.PI;
+		}
 		this.state = {
-			angle: parseInt( this.props.angle, 10 ),
-			x: this.centerX + 250,
-			y: this.centerY,
-			status: Ship.ALIVE
+			angle: 180 + angle * 180 / Math.PI, // our rotation should be facing in, in degrees
+			x: this.centerX + Math.cos( angle ) * ( this.radius + 80 ),
+			y: this.centerY + Math.sin( angle ) * ( this.radius + 80),
+			status: Ship.LIMBO
 		}
 		this.doppelganger = { class: "hidden", x : 0, y : 0 };
 		this.speed = 0;
@@ -53,12 +74,25 @@ export default class Ship extends Component {
 		this.onFireButton = this._onFireButton.bind( this );
 		this.emitter.on( Ship.FIRE_BUTTON, this.onFireButton );
 		this.emitter.on( App.ON_ENTER_FRAME, this.onEnterFrame.bind( this ) );
+		this.emitter.on( App.START_GAME, this.onStartGame.bind( this ) );
 		this.emitter.on( Cannonball.CANNONBALL_MOVED_TO, this.onCannonballMovedTo.bind( this ) );
 		
 		Util.makeAssertions();
+
 	}
 	
-	onEnterFrame(){
+	onStartGame(){
+		this.setStatus( Ship.ALIVE );
+	}
+	
+	// make sure enemies know we're alive, dead, etc. so they can modify *their* state
+	setStatus( newStatus ){
+		this.setState( { status: newStatus } );
+		this.emitter.emit( Ship.CHANGE_STATUS, newStatus );
+	}
+	
+	onEnterFrame( keys ){
+		this.respondToKeys( keys );
 		this.move();
 		this.testForRingCollision();
 	}
@@ -67,19 +101,20 @@ export default class Ship extends Component {
 		let deltaX = position.x - this.state.x;
 		let deltaY = position.y - this.state.y;			
 		let distance = Math.sqrt( deltaX * deltaX + deltaY * deltaY );
-		if( distance < 100 )
+		if( distance < 30 )
 		{
 			this.explode();
 		}
 	}
 	
 	explode(){
-		this.setState( { status : Ship.EXPLODING } );
-		this.emitter.emit( Explosion.EXPLOSION, { x: this.state.x, y: this.state.y, color: "yellow" } );
+		this.setStatus( Ship.EXPLODING );
+		this.emitter.emit( Explosion.EXPLOSION, { x: this.state.x, y: this.state.y, color: "blue" } );
 		setTimeout( this.resurrect.bind( this ), 4000 );	
 	}
 		
 	resurrect(){
+		this.emitter.emit( Ship.CHANGE_STATUS, Ship.ALIVE );
 		this.setState( { status : Ship.ALIVE } );
 	}
 		
@@ -126,6 +161,8 @@ export default class Ship extends Component {
 	
 	move( jumpDistance ){
 	
+		if( this.state.status !== Ship.ALIVE ) return;
+	
 		this.speed *= .98;
 		
 		if( this.speed < .01 ) this.speed = 0;
@@ -169,10 +206,12 @@ export default class Ship extends Component {
 	}
 	
 	fireMissile(){
+		if( this.state.status !== Ship.ALIVE ) return;	
 		this.emitter.emit( Ship.FIRE_MISSILE, { x: this.state.x, y : this.state.y, angle : this.state.angle * Math.PI / 180 } );
 	}
 	
 	respondToKeys( keys ){
+		if( this.state.status !== Ship.ALIVE ) return;	
 		if( keys.left ) this.rotate( App.LEFT );
 		if( keys.right ) this.rotate( App.RIGHT );
 		if( keys.up ) this.goFaster();
@@ -187,12 +226,12 @@ export default class Ship extends Component {
 	
 	goFaster(){
 		this.speed += Ship.THRUST_SPEED;
-		this.speed = Math.min( this.speed, 12 );
+		this.speed = Math.min( this.speed, Ship.MAX_SPEED );
 	}
 
 	render(){
 		
-		if( this.state.status !== Ship.ALIVE ) return null;
+		if( this.state.status === Ship.EXPLODING ) return null;
 		
 		return(
 		

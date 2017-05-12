@@ -9,15 +9,12 @@ ReactDOM.render(
 );
 
 /*
-	TODO: Improve appearance of cannon
+
 	TODO: https://www.npmjs.com/package/react-sound
 	TODO: Enemy can be destroyed (w animation and deactivated Ship)
 	TODO: Enemy mines appear on inner rings
 	TODO: Enemy mines hop out from inner rings to outer rings
 	TODO: Enemy mines hop off outer rings and pursue hero in wavering path
-	TODO: Ship needs state to know if it should handle key input or not
-	TODO: Game needs click to start (in which case it should hide start-prompt and 
-	set a timeout to tell the ship to start accepting key input)
 	TODO: "remaining lives" display
 	TODO: score display
 	TODO: starting game resets score
@@ -46,5 +43,12 @@ DONE:
 	TODO: Rings must regenerate when last segment is destroyed
 	TODO: Enemy fires cannon through gaps	
 	TODO: Turn off machine-gun mode	
-	
+	TODO: increase ring quanta, decrease base radius
+	TODO: allow more than once explosion at once
+	TODO: Different color explosion for hero
+	TODO: make sure ship bounce is good	
+	TODO: make sure dead enemy can't be hit again while still dead
+	TODO: Ship needs state to know if it should handle key input or not
+	TODO: Game needs click to start (in which case it should hide start-prompt and 
+	set a timeout to tell the ship to start accepting key input)	
 */

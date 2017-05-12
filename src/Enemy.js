@@ -24,26 +24,29 @@ export default class Enemy extends Component
 	}
 	
 	
-		
-	
 	constructor( props ){
 		super( props );
 		this.state = {
 			angle : 0,
 			x: this.props.centerX,
 			y: this.props.centerY,
-			status: Enemy.ALIVE
-			
+			status: Enemy.ALIVE,
+			radius: parseInt( this.props.radius, 10 )
 		};
 		this.angle_velocity = 0;
 		this.emitter = this.props.emitter;
 		this.emitter.on( App.ON_ENTER_FRAME, this.onEnterFrame.bind( this ) );
 		this.emitter.on( Ship.POSITION, this.onShipMove.bind( this ) );
 		this.emitter.on( Ring.FOUND_INTACT_SEGMENT, this.onFoundSegmentAtAngle.bind( this ) );		
-		this.emitter.on( Bullet.MOVED_TO, this.onBulletMove.bind( this ) );			
+		this.emitter.on( Bullet.MOVED_TO, this.onBulletMove.bind( this ) );	
+		this.emitter.on( Ship.CHANGE_STATUS, this.onShipChangeStatus.bind( this ) );			
+				
 		this.currentFrame = 0;
 	}
 	
+	onShipChangeStatus( newStatus ){
+		this.shipStatus = newStatus;
+	}	
 	
 	onEnterFrame(){
 	
@@ -65,11 +68,13 @@ export default class Enemy extends Component
 	
 	onBulletMove( bulletPosition ){
 	
+		if( this.state.status !== Enemy.ALIVE ) return; // can only get shot when alive
+	
 		let deltaX = bulletPosition.x - this.state.x;
 		let deltaY = bulletPosition.y - this.state.y;		
 	
 		let distance = Math.sqrt( deltaX * deltaX + deltaY * deltaY );
-		if( distance < 100 )
+		if( distance < this.state.radius )
 		{
 			this.explode();
 		}
@@ -87,6 +92,7 @@ export default class Enemy extends Component
 	}
 	
 	move(){
+		if( this.shipStatus !== Ship.ALIVE ) return;
 		this.setState( { angle : this.state.angle - this.angle_velocity } );
 		this.blockedBySegmentAtAngle = false;
 		this.emitter.emit( Enemy.LOOKING_FOR_SEGMENT_AT_ANGLE, this.state.angle );

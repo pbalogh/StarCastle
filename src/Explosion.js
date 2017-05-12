@@ -1,36 +1,37 @@
 import React, { Component } from 'react';
-import Bullet from './Bullet';
 
 export default class Explosion extends Component{
 
 	static get EXPLOSION(){
 		return "EXPLOSION";
 	}
+	
+	static get REMOVE_EXPLOSION(){
+		return "REMOVE_EXPLOSION";
+	}
 
 	constructor( props ){
 	
 		super( props );
-		this.state = { status: this.props.status };
-		this.emitter = this.props.emitter;		
-		this.emitter.on( Explosion.EXPLOSION, this.explode.bind( this ) );
+		this.startingX = parseFloat( this.props.startingX, 10 );
+		this.startingY = parseFloat( this.props.startingY, 10 );
+		this.emitter = this.props.emitter;	
+		this.explode( this.startingX, this.startingY );
 	}
 
-	explode( data ){
-		this.x = data.x;
-		this.y = data.y;
-		this.explosionClass = data.color;
-		this.setState( { status: Bullet.ALIVE } );
+	explode( x, y ){
+		this.x = x;
+		this.y = y;
+		this.explosionClass = this.props.color;
 		setTimeout( this.die.bind( this ), 2000 );
 	}
 	
 	die(){
-		this.setState( { status: Bullet.DEAD } );
+		this.emitter.emit( Explosion.REMOVE_EXPLOSION, { startingX : this.startingX, startingY : this.startingY } );
 	}
 
 	render(){
-			
-		if( this.state.status !== Bullet.ALIVE  ) return null;
-		
+					
 		return ( 
 
 			

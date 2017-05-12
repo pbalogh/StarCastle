@@ -97,10 +97,17 @@ g.ring.huge{
 }
 
 .explosion{
-	stroke: yellow;
 	stroke-width: 1px;
 	fill: "none";
 	animation: explosion-expand-and-shrink .4s ease-in-out forwards;
+}
+
+.yellow {
+	stroke: yellow;
+}
+
+.blue {
+	stroke: blue;
 }
 
 
