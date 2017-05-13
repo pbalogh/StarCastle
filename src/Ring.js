@@ -48,7 +48,6 @@ export default class Ring extends StarCastleEntity {
 
 	onEnemyLookingForSegment( angle ){
 		let segmentIndex = this.findSegmentAtGlobalAngle( angle );
-
 		if( this.segmentStatus[ segmentIndex ] < 2 )
 		{
 			this.emitter.emit( Ring.FOUND_INTACT_SEGMENT );
@@ -57,7 +56,8 @@ export default class Ring extends StarCastleEntity {
 
 	findSegmentAtGlobalAngle( angle ){
 		// make it a positive number of degrees by wrapping around 360
-		let angleDiff = (( angle - this.state.angle ) + 360 ) % 360;
+		let angleDiff = (( angle - this.state.angle ) + 720 ) % 360;
+
 		let degreesPerSegment = 360 / this.numSegments;
 		let seg = Math.floor( angleDiff / degreesPerSegment );
 		return seg;
