@@ -25,6 +25,10 @@ export default class Ring extends StarCastleEntity {
 		return "FOUND_INTACT_SEGMENT";
 	}
 
+	static get HIT_SEGMENT(){
+		return "HIT_SEGMENT";
+	}
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -94,6 +98,7 @@ export default class Ring extends StarCastleEntity {
 
 		if( this.segmentStatus[ segmentIndex ] < 2 ) // it's a living segment
 		{
+			this.emitter.emit( Ring.HIT_SEGMENT, { status: this.segmentStatus[ segmentIndex ] });
 			this.segmentStatus[ segmentIndex ]++;
 			bulletPosition.bullet.die();
 			if( this.areAllSegmentsDead() )

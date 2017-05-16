@@ -8,7 +8,10 @@ import Bullet from "./Bullet";
 import Cannonball from "./Cannonball";
 import Explosion from "./Explosion";
 import MicroEmitter from 'micro-emitter';
-import $ from 'jquery';
+import Scorekeeper from './Scorekeeper';
+import Lifekeeper from './Lifekeeper';
+import Instructions from './Instructions';
+
 
 
 const KEY = {
@@ -40,6 +43,10 @@ class App extends Component {
 
 	static get START_GAME(){
 		return "START_GAME";
+	}
+
+	static get GAME_OVER(){
+		return "GAME_OVER";
 	}
 
 	constructor( props ){
@@ -170,10 +177,10 @@ class App extends Component {
 	}
 
 	hideStartPrompt(){
-
-		$('.title').addClass("hidden");
 		this.emitter.emit( App.START_GAME );
 	}
+
+
 
 	explode( data ) {
 		let explosions = this.state.explosions.slice()
@@ -217,13 +224,9 @@ class App extends Component {
         })
         }
           </svg>
-          <div className="title">
-          LEFT AND RIGHT ARROWS TO ROTATE <br /> SPACE BAR TO FIRE <br />
-          Click Anywhere to Start
-          </div>
-					<div className="score">
-          000000
-          </div>
+					<Instructions emitter={this.emitter} />
+					<Scorekeeper emitter={this.emitter}/>
+					<Lifekeeper emitter={this.emitter}/>
       </div>
     );
   }
