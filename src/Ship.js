@@ -71,6 +71,7 @@ export default class Ship extends StarCastleEntity {
 		this.onFireButton = this._onFireButton.bind( this );
 		this.emitter.on( Ship.FIRE_BUTTON, this.onFireButton );
 		this.emitter.on( App.START_GAME, this.onStartGame.bind( this ) );
+		this.emitter.on( App.GAME_OVER, this.onEndGame.bind( this ) );
 		this.emitter.on( Cannonball.CANNONBALL_MOVED_TO, this.onCannonballMovedTo.bind( this ) );
 
 		Util.makeAssertions();
@@ -79,6 +80,10 @@ export default class Ship extends StarCastleEntity {
 
 	onStartGame(){
 		this.setStatus( Ship.ALIVE );
+	}
+
+	onEndGame(){
+		this.setStatus( Ship.LIMBO );
 	}
 
 	// make sure enemies know we're alive, dead, etc. so they can modify *their* state
@@ -94,6 +99,7 @@ export default class Ship extends StarCastleEntity {
 	}
 
 	onCannonballMovedTo( position ){
+		if( this.state.status !== Ship.ALIVE ) return;
 		let deltaX = position.x - this.state.x;
 		let deltaY = position.y - this.state.y;
 		let distance = Math.sqrt( deltaX * deltaX + deltaY * deltaY );

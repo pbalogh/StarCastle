@@ -2,6 +2,7 @@ import React from 'react';
 import RingSegment from './RingSegment';
 import Bullet from './Bullet';
 import Enemy from './Enemy';
+import App from './App';
 import StarCastleEntity from './StarCastleEntity';
 import $ from 'jquery';
 
@@ -41,7 +42,7 @@ export default class Ring extends StarCastleEntity {
 		this.emitter.on( Bullet.MOVED_TO, this.onBulletMove.bind( this ) );
 		this.emitter.on( Enemy.LOOKING_FOR_SEGMENT_AT_ANGLE, this.onEnemyLookingForSegment.bind( this ) );
 		this.emitter.on( Ring.RESURRECT, this.regenerate.bind( this ) );
-
+		this.emitter.on( App.START_GAME, this.regenerate.bind( this ) );
 		this.numSegments = parseInt( this.props.numSegments, 10 );
 		this.segmentStatus = [];
 		for( let i = 0; i < this.numSegments; i++ )

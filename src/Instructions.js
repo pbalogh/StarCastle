@@ -17,7 +17,7 @@ export default class Instructions extends Component{
   }
 
   onEndGame(){
-    this.setState( { hidden : true });
+    this.setState( { hidden : false });
   }
 
   render(){
@@ -25,7 +25,7 @@ export default class Instructions extends Component{
     if( this.state.hidden ) return null;
 
       return (
-      <div className="title">
+      <div className="title vector-text">
           LEFT AND RIGHT ARROWS TO ROTATE <br /> SPACE BAR TO FIRE <br />
           Click Anywhere to Start
       </div>

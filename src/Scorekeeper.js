@@ -28,7 +28,7 @@ export default class Scorekeeper extends Component{
   }
 
   render(){
-    return <div className="score">
+    return <div className="score vector-text">
           { this.getScoreAsString( this.state.score ) }
           </div>
   }

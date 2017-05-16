@@ -7,7 +7,7 @@ export default class Lifekeeper extends Component{
     super(props);
     this.emitter = this.props.emitter;
     this.state = {
-      lives : 0
+      lives : 3
     };
 
     this.emitter.on( App.START_GAME, this.onStartGame.bind(this) );
@@ -17,9 +17,9 @@ export default class Lifekeeper extends Component{
   onShipChangeStatus( newStatus ){
     if( newStatus === Ship.EXPLODING )
     {
-      console.log("Hearing explosiong and this.state.lives is " + this.state.lives );
       if( this.state.lives <= 1 )
       {
+        alert("Game over");
         this.emitter.emit( App.GAME_OVER );
       }
       this.setState( { lives: this.state.lives - 1 });
@@ -32,12 +32,12 @@ export default class Lifekeeper extends Component{
 
   getLivesAsString(){
     let scorestring = "000000000" + this.state.lives;
-    return scorestring.substr( scorestring.length - 9 );;
+    return scorestring.substr( scorestring.length - 9 );
   }
 
   render(){
-    return <div className="lives">
-          { this.getLivesAsString( this.state.lives ) }
+    return <div className="lives vector-text">
+          { this.state.lives }
           </div>
   }
 

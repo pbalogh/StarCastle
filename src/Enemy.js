@@ -78,6 +78,7 @@ export default class Enemy extends StarCastleEntity
 	}
 
 	move(){
+		if( this.state.status !== Enemy.ALIVE ) return;
 		if( this.shipStatus !== Ship.ALIVE ) return;
 		this.setState( { angle : this.state.angle - this.angle_velocity } );
 		this.blockedBySegmentAtAngle = false;

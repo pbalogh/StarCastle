@@ -112,13 +112,16 @@ g.ring.huge{
 
 
 @font-face {
-
 	font-family: "VectorBattle";
 	src: local('Vector Battle'), url('./Vectorb.ttf') format('truetype');
 }
 
-div.title{
+.vector-text{
 	font-family: 'VectorBattle', sans-serif;
+	letter-spacing: 2.5px;
+}
+
+div.title{
 	color: blue;
 	line-height: 38px;
 	text-shadow: -.5px -.5px 1px #ffffff, .5px .5px 0px #ff0000;
@@ -136,7 +139,6 @@ div.title{
 }
 
 div.score{
-	font-family: 'VectorBattle', sans-serif;
 	color: blue;
 	line-height: 38px;
 	position:absolute;
