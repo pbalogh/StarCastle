@@ -108,7 +108,7 @@ div.title{
 	color: blue;
 	line-height: 12px;
 	text-shadow: -.5px -.5px 1px #ffffff, .5px .5px 1px #ff0000, 0 0 5px darkblue;
-	padding: 18px;
+	padding: 28px;
 	position:absolute;
 	left: 50%;
 	top: calc(50% - 20px);
@@ -124,6 +124,7 @@ div.title{
 }
 
 div.score{
+	letter-spacing: 4.5px;
 	color: blue;
 	line-height: 38px;
 	position:absolute;
