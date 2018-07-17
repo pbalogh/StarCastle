@@ -26,7 +26,7 @@ export default class Instructions extends Component{
 
       return (
       <div className="title vector-text">
-          LEFT AND RIGHT ARROWS TO ROTATE <br /> SPACE BAR TO FIRE <br />
+          LEFT AND RIGHT ARROWS TO ROTATE <p /> SPACE BAR TO FIRE <p />
           Click Anywhere to Start
       </div>
       );

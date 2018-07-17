@@ -5,3 +5,13 @@ Very much a work in progress, this is an exploration of how React and ES6 can be
 The index.js file contains a list of outstanding TODO items, including many of the elements that make a game actually enjoyable. However, even in the earliest stages this is a decent proof-of-concept for React as a framework for an interactive SVG application.
 
 Also a pleasant way to learn about [create-react-app](https://github.com/facebookincubator/create-react-app).
+
+To use:
+
+`npm install`
+
+and then
+
+`npm start`
+
+
